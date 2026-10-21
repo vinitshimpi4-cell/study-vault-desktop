@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyVault</title>
+<meta name="theme-color" content="#0a0f2c">
+
+<style>
+:root{--bg:#0a0f2c;--tx:#e8ecff;--mu:#9aa6d8;--gl:rgba(255,255,255,.06);--bd:rgba(150,160,255,.22);--g:linear-gradient(135deg,#7c3aed,#2f7bff);--ac:#8b7bff;--lk:#8fd8ff;--lk2:#c4ecff}
+[data-theme=light]{--bg:#eef1ff;--tx:#14173a;--mu:#555d8f;--gl:rgba(255,255,255,.75);--bd:rgba(90,80,200,.22);--lk:#4a24c9;--lk2:#2a0f8f}
+*{box-sizing:border-box}
+a,a:visited{color:var(--lk);font-weight:600;text-decoration:underline;text-underline-offset:3px}a:hover{color:var(--lk2)}
+a.b{text-decoration:none;display:inline-block;font-weight:400}
+a.b.gh,a.b.gh:visited,a.b.v,a.b.v:visited{color:#fff}
+.b.gh{background:#24292f;border:1px solid #57606a;color:#fff}.b.gh:hover{background:#32383f}
+.b.v{background:linear-gradient(135deg,#06b6d4,#7c3aed);border:0;color:#fff}
+.by{margin:22px 8px 6px;font-size:.78rem;color:var(--mu)}.by b{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+#splash{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#060a22;color:#fff;text-align:center;overflow:hidden;padding:20px;transition:opacity .7s}
+#splash.out{opacity:0}
+.sp-glow{position:absolute;width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.45),rgba(47,123,255,.2) 40%,transparent 70%);animation:spPulse 3.5s ease-in-out infinite alternate}
+.sp-in{position:relative;max-width:900px}
+.sp-t{font-size:clamp(2rem,7vw,4.6rem);margin:0;font-weight:800;letter-spacing:.02em;perspective:600px}
+.sp-w{display:inline-block;white-space:nowrap}
+.sp-t span span{display:inline-block;animation:spIn .9s cubic-bezier(.2,.9,.3,1.2) both;text-shadow:0 0 24px #8b7bff,0 0 60px #2f7bff}
+.sp-line{height:2px;width:min(420px,70vw);margin:22px auto;background:linear-gradient(90deg,transparent,#8fd8ff,#c084fc,transparent);animation:spLine 1s ease 2.3s both}
+.sp-by{margin:0;font-size:1.05rem;letter-spacing:.35em;text-transform:uppercase;color:#9aa6d8;animation:spUp .9s ease 2.7s both}
+.sp-n{margin:6px 0 0;font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:700;background:linear-gradient(90deg,#8fd8ff,#c084fc,#8fd8ff);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:spUp .9s ease 3.1s both,spShine 3s linear 4s infinite}
+.sp-skip{margin-top:34px;color:#9aa6d8;animation:spUp .8s ease 4.2s both;cursor:pointer}
+@keyframes spIn{from{opacity:0;transform:translateY(50px) scale(.3) rotateX(80deg);filter:blur(16px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes spUp{from{opacity:0;transform:translateY(18px);letter-spacing:.6em}to{opacity:1;transform:none}}
+@keyframes spLine{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
+@keyframes spPulse{from{transform:scale(.85);opacity:.6}to{transform:scale(1.1);opacity:1}}
+@keyframes spShine{to{background-position:200% 0}}
+option{background:var(--bg);color:var(--tx)}
+::placeholder{color:var(--mu);opacity:1}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
+#bg{position:fixed;inset:0;z-index:0}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;z-index:0;animation:fl 18s ease-in-out infinite alternate}
+.o1{width:380px;height:380px;background:#7c3aed;top:-80px;left:20%}.o2{width:320px;height:320px;background:#2f7bff;bottom:-60px;right:5%}
+@keyframes fl{to{transform:translate(60px,40px)}}
+#app{position:relative;z-index:1;display:flex;min-height:100vh}
+#side{width:250px;flex:none;padding:16px;background:var(--gl);backdrop-filter:blur(16px);border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-size:1.35rem;font-weight:700;margin:4px 8px 18px;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+#nav button{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;color:var(--mu);padding:9px 12px;border-radius:10px;cursor:pointer;font:inherit;transition:.15s}
+#nav button:hover{background:var(--gl);color:var(--tx)}
+#nav button.on{background:var(--g);color:#fff}
+#col{flex:1;min-width:0}
+header{display:flex;gap:10px;padding:14px 24px;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+#q{flex:1}#menu{display:none}
+main{padding:8px 24px 60px;max-width:1100px;outline:0}
+h1{margin:.3em 0}small,.mu{color:var(--mu);display:block}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--gl);color:var(--tx);font:inherit}
+:focus-visible{outline:2px solid #5aa2ff;outline-offset:2px}
+.b{padding:9px 16px;border-radius:10px;border:1px solid var(--bd);background:var(--gl);color:var(--tx);cursor:pointer;font:inherit;transition:.15s}
+.b:hover{transform:translateY(-1px);border-color:var(--ac)}
+.b.p{background:var(--g);border:0;color:#fff}.b.s{padding:5px 10px;font-size:.85rem}.b.d{color:#ff7b8f}
+.card{background:var(--gl);border:1px solid var(--bd);border-radius:16px;padding:16px;backdrop-filter:blur(14px);margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}.grid .card{margin:0}
+.pc{cursor:pointer;transition:.2s}.pc:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.3)}
+.stat b{display:block;font-size:2rem}
+.row,.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row2{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:180px}
+.ic{font-size:1.6rem;color:var(--ac)}
+.tag{display:inline-block;font-size:.75rem;padding:1px 9px;margin:2px 4px 0 0;border-radius:99px;background:rgba(139,123,255,.2)}
+.drop{display:block;text-align:center;padding:26px;margin:12px 0;border:2px dashed var(--bd);border-radius:16px;cursor:pointer;color:var(--mu)}
+.drop:hover{border-color:var(--ac);color:var(--tx)}
+.empty{text-align:center;padding:40px;color:var(--mu)}.empty i{font-size:2.6rem;display:block;font-style:normal}
+.bar{height:10px;border-radius:9px;background:var(--gl);overflow:hidden}.bar div{height:100%;background:var(--g)}
+.av{width:84px;height:84px;border-radius:50%;object-fit:cover;background:var(--g);display:grid;place-items:center;font-size:2rem}
+.thumb{width:100%;height:120px;object-fit:cover;border-radius:10px}
+dialog{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:18px;padding:22px;width:min(520px,94vw);max-height:90vh}
+dialog::backdrop{background:rgba(5,8,25,.7)}
+.f label{display:block;margin:10px 0;color:var(--mu)}.f .row{justify-content:flex-end;margin-top:14px}.f.wide{width:min(900px,86vw)}
+dialog img,dialog video,dialog iframe{max-width:100%;width:100%;height:60vh;object-fit:contain;border:0}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.vc{margin:0;padding:10px;cursor:pointer;transition:.2s}.vc:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.3)}
+.vm{display:grid;place-items:center;width:100%;height:170px;object-fit:cover;border-radius:10px;background:rgba(0,0,0,.25);font-size:2.6rem;color:var(--ac)}
+.vc .acts{margin-top:8px}
+pre{white-space:pre-wrap;word-break:break-word;max-height:55vh;overflow:auto}
+#toasts{position:fixed;bottom:18px;right:18px;z-index:99;display:grid;gap:8px}
+.toast{background:var(--g);color:#fff;padding:10px 16px;border-radius:12px;animation:in .25s}@keyframes in{from{opacity:0;transform:translateY(10px)}}
+@media(max-width:800px){#side{position:fixed;z-index:20;left:-270px;transition:.25s;background:var(--bg)}#side.open{left:0}#menu{display:block}main,header{padding-left:14px;padding-right:14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+dialog.big{width:96vw;height:94vh;max-width:none;max-height:none;padding:14px}
+dialog.big[open]{display:flex}
+dialog.big .f.wide{width:100%;height:100%;display:flex;flex-direction:column;min-height:0}
+.pvh{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pvh h2{margin:0;font-size:1.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pvb{flex:1;min-height:0;margin-top:10px;display:flex}
+.pvb img,.pvb video,.pvb iframe{width:100%;height:100%;max-height:none;object-fit:contain}
+.pvb pre{flex:1;max-height:none;overflow:auto;margin:0}
+.pvb p{margin:auto}
+.thumb[data-a]{cursor:pointer}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas><div class="orb o1"></div><div class="orb o2"></div>
+<div id="app">
+  <aside id="side"><div class="brand">✦ StudyVault</div><nav id="nav" aria-label="Main navigation"></nav><div class="by">Built by <b>Vinit M. Shimpi</b></div></aside>
+  <div id="col">
+    <header><button id="menu" class="b" aria-label="Toggle menu">☰</button><input id="q" type="search" placeholder="Search projects, files, prompts…" aria-label="Global search"><button id="theme" class="b" aria-label="Toggle dark or light mode">◐</button></header>
+    <main id="main" tabindex="-1"></main>
+  </div>
+</div>
+<dialog id="dlg"></dialog><div id="toasts" aria-live="polite"></div>
+<script>
+'use strict';
+// Saves everything into a folder on the user's computer (File System Access API: Chrome / Edge).
+// One sub-folder per sidebar section. app.js still calls tx(store, method, ...args) as before.
+const SEC = { docs: 'Project Documentation', zip: 'ZIP Files', video: 'Video Library', notes: 'Study Notes', resume: 'Resume Manager', pic: 'Profile Pictures', cert: 'Certificates' };
+const DIRS = ['My Projects', 'Project Documentation', 'ZIP Files', 'GitHub Repositories', 'Video Library', 'Prompt Library', 'Study Notes', 'Resume Manager', 'Profile Pictures', 'Certificates', 'Visual Study', 'Bookmarks & Resources', 'Archive', 'Backup & Settings'];
+let PENDING_NAME = '', ROOT = null, SUB = {}, M = {}, queue = Promise.resolve();   // M = tags / project links / primary flag per file path
+const have = new Map();                                          // file id -> "Folder/name" for files already on disk
+const q = fn => { const p = queue.then(fn); queue = p.catch(() => {}); return p; };   // one write at a time
+
+/* remember the chosen folder between visits (a folder handle can be stored in IndexedDB) */
+const hdb = () => new Promise((ok, no) => { const r = indexedDB.open('studyvault-folder', 1); r.onupgradeneeded = () => r.result.createObjectStore('h'); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
+const hget = async () => { const d = await hdb(); return new Promise(ok => { const r = d.transaction('h').objectStore('h').get('root'); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); }); };
+const hput = async h => { const d = await hdb(); return new Promise((ok, no) => { const t = d.transaction('h', 'readwrite'); t.objectStore('h').put(h, 'root'); t.oncomplete = ok; t.onerror = () => no(t.error); }); };
+
+/* full-screen start screen: needed because the browser only grants folder access after a click */
+function gate(msg, btn, fn, ask) {
+  let cn = ''; try { cn = localStorage.getItem('sv-name') || ''; } catch {}
+  return new Promise(res => {
+    const d = document.createElement('div');
+    d.style.cssText = 'position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#0a0f2c;color:#e8ecff;padding:20px;text-align:center;font:16px system-ui';
+    d.innerHTML = `<div style="max-width:540px"><h1>✦ StudyVault</h1><p>${msg}</p>${ask ? `<p style="margin:20px 0 6px"><label for="gn">Your name (shown in your welcome message)</label></p><input id="gn" maxlength="60" placeholder="Enter your name" autocomplete="name" value="${esc(cn)}" style="max-width:340px;text-align:center;margin-bottom:18px">` : ''}<button class="b p" id="gb">${btn}</button><p id="ge" style="color:#ff7b8f"></p><small style="margin-top:18px">Built by Vinit M. Shimpi</small></div>`;
+    if (ask) d.querySelector('#gn').addEventListener('keydown', e => { if (e.key === 'Enter') d.querySelector('#gb').click(); });
+    document.body.append(d);
+    d.querySelector('#gb').onclick = async () => {
+      if (ask) { PENDING_NAME = d.querySelector('#gn').value.trim(); try { localStorage.setItem('sv-name', PENDING_NAME); } catch {} }
+      try { await fn(); d.remove(); res(); }
+      catch (e) { d.querySelector('#ge').textContent = e.name === 'AbortError' ? 'No folder was selected.' : e.message; }
+    };
+  });
+}
+async function pick() { const h = await showDirectoryPicker({ mode: 'readwrite', id: 'studyvault' }); ROOT = h; try { await hput(h); } catch {} }   // if the browser cannot remember it, ask again next visit
+async function setup() {                                         // creates any missing section folders, reuses existing ones
+  SUB = {}; for (const n of DIRS) SUB[n] = await ROOT.getDirectoryHandle(n, { create: true });
+  M = await readJson('Backup & Settings', 'file-info.json') || {};
+}
+async function initFolder() {
+  if (!window.showDirectoryPicker) await gate('StudyVault saves into a folder on your computer, which works in Google Chrome or Microsoft Edge. Please open this page in one of them.', 'OK', async () => { throw new Error('Open this page in Chrome or Edge.'); });
+  let h = null; try { h = await hget(); } catch {}
+  let ok = false; if (h) { try { ok = (await h.queryPermission({ mode: 'readwrite' })) === 'granted'; } catch {} }
+  if (ok) ROOT = h;
+  else if (h) await gate(`Reconnect your folder “<b>${esc(h.name)}</b>” so StudyVault can read and save your files.`, 'Reconnect folder', async () => { if ((await h.requestPermission({ mode: 'readwrite' })) !== 'granted') throw new Error('Permission was not given.'); ROOT = h; }, true);
+  else await gate('Choose the main folder where StudyVault keeps everything (for example Documents → StudyVault). Sub-folders for each section are created automatically, and existing ones with the same names are used. Pick a folder inside Documents, not Documents itself.', 'Choose folder', pick, true);
+  await setup();
+}
+async function chgFolder() { await pick(); await setup(); }
+
+/* JSON helpers (createWritable writes to a temporary copy and swaps it in on close) */
+async function readJson(dir, name) { try { return JSON.parse(await (await (await SUB[dir].getFileHandle(name)).getFile()).text()); } catch { return null; } }
+async function writeFile(dh, name, data) { const w = await (await dh.getFileHandle(name, { create: true })).createWritable(); await w.write(data); await w.close(); }
+const writeJson = (dir, name, v) => writeFile(SUB[dir], name, JSON.stringify(v, null, 1));
+const saveMeta = () => writeJson('Backup & Settings', 'file-info.json', M);
+
+/* links are saved as small shortcut files (.html) that open the link directly in Chrome / any browser */
+const MARK = 'studyvault-link', safeName = t => String(t).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '_').trim().slice(0, 100) || 'link';
+const linkHtml = (id, title, url) => {
+  const a = String(url).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'), t = String(title).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])), j = JSON.stringify(String(url)).replace(/</g, '\\u003c');
+  return `<!doctype html>\n<html><head><meta charset="utf-8"><title>${t}</title>\n<meta name="${MARK}" content="${id}">\n<meta http-equiv="refresh" content="0;url=${a}">\n</head><body><p>Opening <a href="${a}">${t}</a> …</p>\n<script>location.replace(${j})<\/script></body></html>\n`;
+};
+async function syncLinks(items) {
+  items = items.filter(i => i.url && /^https?:\/\//i.test(i.url));
+  for (const dn of ['Visual Study', 'GitHub Repositories', 'Bookmarks & Resources']) {
+    const dh = SUB[dn], want = items.filter(i => i.dir === dn), mine = new Map(), taken = new Set();
+    for await (const [name, h] of dh.entries()) {
+      if (h.kind !== 'file') continue; taken.add(name.toLowerCase());
+      if (!/\.html$/i.test(name)) continue;
+      const f = await h.getFile(); if (f.size > 6000) continue;
+      const txt = await f.text(), mm = /name="studyvault-link" content="([^"]+)"/.exec(txt); if (mm) mine.set(mm[1], { name, txt });
+    }
+    for (const it of want) {
+      const html = linkHtml(it.id, it.title, it.url), cur = mine.get(it.id);
+      if (cur) { if (cur.txt === html) continue; taken.delete(cur.name.toLowerCase()); await dh.removeEntry(cur.name); }
+      let n = safeName(it.title) + '.html', k = 1; while (taken.has(n.toLowerCase())) n = `${safeName(it.title)} (${++k}).html`;
+      taken.add(n.toLowerCase()); await writeFile(dh, n, html);
+    }
+    for (const [id, c] of mine) if (!want.some(w => w.id === id)) await dh.removeEntry(c.name);
+  }
+}
+
+/* projects, prompts, bookmarks, profile -> small JSON files in their own section folders */
+const saveState = St => q(async () => {
+  const pr = St.projects || [], { projects, prompts, marks, ...rest } = St;
+  await writeJson('My Projects', 'projects.json', pr.filter(p => !p.archived));
+  await writeJson('Archive', 'archived-projects.json', pr.filter(p => p.archived));
+  await writeJson('Prompt Library', 'prompts.json', St.prompts || []);
+  await writeJson('Bookmarks & Resources', 'bookmarks.json', St.marks || []);
+  await writeJson('GitHub Repositories', 'repositories.json', pr.filter(p => p.repo).map(p => ({ project: p.name, url: p.repo })));
+  await writeJson('Backup & Settings', 'settings.json', rest);
+  await saveMeta();
+  await syncLinks([
+    ...(St.visuals || []).map(v => ({ dir: 'Visual Study', id: 'v' + v.id, title: v.title, url: v.url })),
+    ...pr.filter(p => p.live).map(p => ({ dir: 'Visual Study', id: 'p' + p.id, title: p.name + ' - Visualize what you studied', url: p.live })),
+    ...pr.filter(p => p.repo).map(p => ({ dir: 'GitHub Repositories', id: 'r' + p.id, title: p.name + ' - GitHub', url: p.repo })),
+    ...(St.marks || []).map(x => ({ dir: 'Bookmarks & Resources', id: 'b' + x.id, title: x.title, url: x.url }))
+  ]);
+});
+async function loadState() {
+  const a = await readJson('My Projects', 'projects.json'), b = await readJson('Archive', 'archived-projects.json'), s = await readJson('Backup & Settings', 'settings.json');
+  if (!a && !b && !s) return null;
+  return { profile: {}, theme: 'dark', ...s, projects: [...(a || []), ...(b || [])], prompts: await readJson('Prompt Library', 'prompts.json') || [], marks: await readJson('Bookmarks & Resources', 'bookmarks.json') || [] };
+}
+
+/* files: every file in a section folder is listed (no app limit); ids are safe, stable strings made from the path */
+const enc = p => btoa(unescape(encodeURIComponent(p))).replace(/[+/=]/g, c => ({ '+': '-', '/': '_', '=': '' }[c]));
+async function scan() {
+  have.clear(); const out = [];
+  for (const [cat, dn] of Object.entries(SEC))
+    for await (const [name, h] of SUB[dn].entries()) {
+      if (h.kind !== 'file' || name.startsWith('.')) continue;
+      const file = await h.getFile(), path = dn + '/' + name, m = M[path] || {}, id = enc(path);
+      have.set(id, path);
+      out.push({ id, path, name, type: file.type, size: file.size, blob: file, cat, tags: m.tags || [], projectId: m.projectId || '', primary: !!m.primary, added: file.lastModified });
+    }
+  return out;
+}
+async function uniq(dh, name) {                                   // never overwrite: "a.pdf" -> "a (2).pdf"
+  const i = name.lastIndexOf('.'), b = i > 0 ? name.slice(0, i) : name, e = i > 0 ? name.slice(i) : '';
+  let n = name, k = 1; for (;;) { try { await dh.getFileHandle(n); n = `${b} (${++k})${e}`; } catch { return n; } }
+}
+const split = p => [p.slice(0, p.indexOf('/')), p.slice(p.indexOf('/') + 1)];
+async function putFile(r) {
+  const before = S.profile.pic;
+  await q(async () => {
+    const dn = SEC[r.cat] || SEC.docs, old = have.get(r.id), oldId = r.id;
+    r.name = r.name.replace(/[\\/:*?"<>|]/g, '_').trim() || 'file';
+    if (!old) { r.name = await uniq(SUB[dn], r.name); await writeFile(SUB[dn], r.name, r.blob); }          // new upload
+    else if (old !== dn + '/' + r.name) {                                                                   // rename
+      const [od, on] = split(old), nn = await uniq(SUB[od], r.name);
+      await writeFile(SUB[od], nn, r.blob); await SUB[od].removeEntry(on); delete M[old]; r.name = nn;
+      r.blob = await (await SUB[od].getFileHandle(nn)).getFile();
+    }
+    r.path = dn + '/' + r.name; r.id = enc(r.path);
+    if (S.profile.pic === oldId) S.profile.pic = r.id;
+    have.delete(oldId); have.set(r.id, r.path);
+    M[r.path] = { tags: r.tags, projectId: r.projectId, primary: r.primary };
+    await saveMeta();
+  });
+  if (S.profile.pic !== before) await saveState(S);
+  return true;
+}
+const delFile = id => q(async () => {
+  const p = have.get(id); if (!p) return true; const [d, n] = split(p);
+  try { await SUB[d].removeEntry(n); } catch {}
+  have.delete(id); delete M[p]; await saveMeta(); return true;
+});
+const clearFiles = () => q(async () => {
+  for (const dn of Object.values(SEC)) { const names = []; for await (const [n, h] of SUB[dn].entries()) if (h.kind === 'file') names.push(n); for (const n of names) await SUB[dn].removeEntry(n); }
+  have.clear(); M = {}; await saveMeta(); return true;
+});
+const tx = async (st, m, ...a) => {
+  if (st === 'kv') return m === 'put' ? saveState(a[0]) : loadState();
+  if (m === 'put') return putFile(a[0]); if (m === 'getAll') return scan(); if (m === 'delete') return delFile(a[0]); if (m === 'clear') return clearFiles();
+};
+
+</script>
+<script>
+'use strict';
+const $=(s,e=document)=>e.querySelector(s),
+esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+uid=()=>crypto.randomUUID(),
+okUrl=u=>{try{return /^https?:$/.test(new URL(u).protocol)}catch{return false}},
+fmt=n=>n>1e6?(n/1e6).toFixed(1)+' MB':Math.ceil(n/1e3)+' KB',
+dt=t=>new Date(t).toLocaleDateString(),
+NAV=[['dashboard','Dashboard','◈'],['projects','My Projects','▣'],['docs','Project Documentation','▤'],['zip','ZIP Files','⬡'],['repos','GitHub Repositories','⑂'],['video','Video Library','▶'],['visual','Visualize What You Study','❖'],['prompts','Prompt Library','✎'],['notes','Study Notes','☰'],['resume','Resume Manager','⌂'],['pic','Profile Pictures','◉'],['cert','Certificates','✦'],['marks','Bookmarks & Resources','★'],['archive','Archive','▢'],['settings','Backup & Settings','⚙']],
+ICO={docs:'▤',zip:'⬡',video:'▶',notes:'☰',resume:'⌂',pic:'◉',cert:'✦',visual:'❖'};
+let db,S,files=[],view='dashboard',pid=null,Q='',F={s:''};const U={};
+// tx() now lives in folder-adapter.js (saves to your folder)
+const save=()=>{try{localStorage.setItem('sv-name',S.profile.name||'')}catch{}return tx('kv','put',S,'state')},putF=f=>tx('files','put',f);
+const P=id=>S.projects.find(p=>p.id==id),FL=id=>files.find(f=>f.id==id),url=f=>U[f.id]||(U[f.id]=URL.createObjectURL(f.blob));
+const m=(...s)=>!Q||s.join(' ').toLowerCase().includes(Q.toLowerCase());
+const link=(u,l,c)=>okUrl(u)?`<a${c?` class="b ${c}"`:''} href="${esc(u)}" target="_blank" rel="noopener noreferrer">${l}</a> `:'';
+const empty=(i,t)=>`<div class="empty"><i>${i}</i>${esc(t)}</div>`;
+const guess=f=>{const e=f.name.split('.').pop().toLowerCase();return e=='zip'?'zip':/^(mp4|webm|mov)$/.test(e)?'video':/^(png|jpe?g|gif|webp)$/.test(e)?'pic':/^(md|txt)$/.test(e)?'notes':'docs'};
+const toast=t=>{const d=document.createElement('div');d.className='toast';d.textContent=t;$('#toasts').append(d);setTimeout(()=>d.remove(),3200)};
+/* dialogs */
+const dlg=$('#dlg'),close=()=>dlg.open&&dlg.close(),modal=(h,big)=>{dlg.onclose=null;dlg.className=big?'big':'';dlg.innerHTML=h;if(!dlg.open)dlg.showModal()};
+function form(title,fields,v={}){return new Promise(res=>{modal(`<form class="f"><h2>${esc(title)}</h2>${fields.map(([n,l,t,o])=>`<label>${esc(l)}${t=='area'?`<textarea name="${n}" rows="6">${esc(v[n])}</textarea>`:t=='sel'?`<select name="${n}">${o.map(([a,b])=>`<option value="${esc(a)}"${a==v[n]?' selected':''}>${esc(b)}</option>`).join('')}</select>`:`<input name="${n}" type="${t}" value="${esc(v[n])}">`}</label>`).join('')}<div class="row"><button type="button" class="b" id="no">Cancel</button><button class="b p">Save</button></div></form>`);
+const f=$('form',dlg);$('#no').onclick=()=>{close();res(null)};f.onsubmit=e=>{e.preventDefault();res(Object.fromEntries(new FormData(f)));close()};dlg.onclose=()=>res(null)})}
+const sure=t=>new Promise(res=>{modal(`<div class="f"><h2>Please confirm</h2><p>${esc(t)}</p><div class="row"><button class="b" id="no">Cancel</button><button class="b p" id="ok">Confirm</button></div></div>`);$('#no').onclick=()=>{close();res(false)};$('#ok').onclick=()=>{close();res(true)};dlg.onclose=()=>res(false)});
+/* files */
+async function add(list,cat,p){for(const f of list){const r={id:uid(),name:f.name,type:f.type,size:f.size,blob:f,cat:cat||guess(f),tags:[],projectId:p||'',added:Date.now()};try{await putF(r);files.push(r)}catch{toast('Could not store '+f.name+' (storage full or blocked)')}}toast('Upload complete');render()}
+const dz=(cat,p)=>`<label class="drop" tabindex="0">⇪ Drop files here or click to upload<input type="file" multiple hidden data-cat="${cat||''}" data-p="${p||''}"></label>`;
+const dzData=l=>`<span hidden></span>`;
+const fileRow=f=>`<div class="card row2"><span class="ic">${ICO[f.cat]||'▤'}</span><div class="grow"><b>${esc(f.name)}</b>${f.primary?' <span class="tag">primary</span>':''}<small>${fmt(f.size)} · ${dt(f.added)}${P(f.projectId)?' · '+esc(P(f.projectId).name):''}</small><div>${f.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><div class="acts">${[['prev','Preview'],['dl','Download'],['fedit','Edit'],f.cat=='resume'&&!f.primary&&['pri','Make primary'],f.cat=='pic'&&['avatar','Use as avatar'],['fdel','Delete']].filter(Boolean).map(([a,l])=>`<button class="b s${a=='fdel'?' d':''}" data-a="${a}" data-id="${f.id}">${l}</button>`).join('')}</div></div>`;
+const projOpts=()=>[['','— none —'],...S.projects.filter(p=>!p.archived).map(p=>[p.id,p.name])];
+const act={
+go(v){view=v;pid=null;Q='';$('#q').value='';render()},
+open(id){pid=id;view='project';render()},
+prev(id){const f=FL(id),u=url(f),t=f.type,e=f.name.split('.').pop().toLowerCase();let h;
+ if(t.startsWith('image/'))h=`<img src="${u}" alt="${esc(f.name)}">`;else if(t=='application/pdf')h=`<iframe src="${u}" title="PDF preview"></iframe>`;else if(t.startsWith('video/'))h=`<video src="${u}" controls></video>`;
+ else if(t.startsWith('text/')||e=='md'){f.blob.text().then(x=>{$('#pv').textContent=x});h='<pre id="pv"></pre>'}else h='<p>This file type cannot be previewed in the browser. Download it to open it.</p>';
+ modal(`<div class="f wide"><div class="pvh"><h2>${esc(f.name)}</h2><button class="b p" id="x" aria-label="Close preview">✕ Close</button></div><div class="pvb">${h}</div></div>`,true);$('#x').onclick=close},
+dl(id){const f=FL(id),a=document.createElement('a');a.href=url(f);a.download=f.name;a.click()},
+async fedit(id){const f=FL(id),v=await form('Edit file',[['name','File name','text'],['tags','Tags (comma separated)','text'],['projectId','Linked project','sel',projOpts()]],{name:f.name,tags:f.tags.join(', '),projectId:f.projectId});if(!v||!v.name.trim())return;f.name=v.name.trim();f.tags=v.tags.split(',').map(t=>t.trim()).filter(Boolean);f.projectId=v.projectId;await putF(f);toast('File updated');render()},
+async fdel(id){const f=FL(id);if(!await sure(`Delete "${f.name}" permanently from this browser? This cannot be undone.`))return;await tx('files','delete',id);files=files.filter(x=>x.id!=id);if(U[id]){URL.revokeObjectURL(U[id]);delete U[id]}if(S.profile.pic==id)delete S.profile.pic;await save();toast('File deleted');render()},
+async pri(id){for(const f of files.filter(x=>x.cat=='resume')){f.primary=f.id==id;await putF(f)}toast('Primary resume set');render()},
+async avatar(id){S.profile.pic=id;await save();toast('Profile picture updated');render()},
+async rmav(){if(!await sure('Remove your profile picture? The file stays in Profile Pictures.'))return;delete S.profile.pic;await save();render()},
+vform:()=>[['title','Title (topic you studied)','text'],['url','Visualization link (e.g. GitHub Pages)','url'],['tags','Tags (comma separated)','text'],['projectId','Related project','sel',projOpts()]],
+async vnew(){const v=await form('Add visualization link',act.vform(),{projectId:''});if(!v)return;if(!v.title.trim()||!okUrl(v.url.trim()))return toast('Enter a title and a valid http(s) link');(S.visuals=S.visuals||[]).push({id:uid(),title:v.title.trim(),url:v.url.trim(),tags:v.tags,projectId:v.projectId,created:Date.now()});await save();toast('Link saved');render()},
+async vedit(id){const x=S.visuals.find(a=>a.id==id),v=await form('Edit visualization link',act.vform(),x);if(!v)return;if(!v.title.trim()||!okUrl(v.url.trim()))return toast('Enter a title and a valid http(s) link');Object.assign(x,v,{title:v.title.trim(),url:v.url.trim()});await save();toast('Link updated');render()},
+async vdel(id){if(!await sure('Delete this visualization link?'))return;S.visuals=S.visuals.filter(a=>a.id!=id);await save();render()},
+pnew(){pform()},pedit(id){pform(P(id))},
+async parch(id){const p=P(id);p.archived=!p.archived;await save();toast(p.archived?'Archived':'Restored');act.go(p.archived?'archive':'projects')},
+async pdel(id){const p=P(id);if(!await sure(`Delete project "${p.name}"? Linked files and prompts are kept but unlinked.`))return;for(const f of files.filter(x=>x.projectId==id)){f.projectId='';await putF(f)}S.prompts.forEach(x=>{if(x.projectId==id)x.projectId=''});S.projects=S.projects.filter(x=>x.id!=id);await save();toast('Project deleted');act.go('projects')},
+async plink(id){const o=files.filter(f=>f.projectId!=id).map(f=>[f.id,f.name]);if(!o.length)return toast('No other files to link');const v=await form('Link an existing file',[['f','File','sel',o]]);if(!v)return;const f=FL(v.f);f.projectId=id;await putF(f);toast('Linked');render()},
+async prnew(id){const v=await form('New prompt',PRF,{projectId:P(id)?id:''});if(!v)return;if(!v.title.trim()||!v.text.trim())return toast('Title and prompt text are required');S.prompts.push({id:uid(),...v,created:Date.now()});await save();toast('Prompt saved');render()},
+async predit(id){const x=S.prompts.find(p=>p.id==id),v=await form('Edit prompt',PRF,x);if(!v)return;Object.assign(x,v);await save();render()},
+async prdel(id){if(!await sure('Delete this prompt?'))return;S.prompts=S.prompts.filter(p=>p.id!=id);await save();render()},
+async prfile(f){if(!f)return;if(f.size>2e6)return toast('Prompt files must be under 2 MB');const text=await f.text(),v=await form('Save prompt from file',PRF,{title:f.name.replace(/\.[^.]+$/,''),text,projectId:''});if(!v)return;if(!v.title.trim()||!v.text.trim())return toast('Title and prompt text are required');S.prompts.push({id:uid(),...v,created:Date.now()});await save();toast('Prompt imported');render()},
+prdl(id){const x=S.prompts.find(p=>p.id==id);dlText(x.text,(x.title.replace(/[\\/:*?"<>|]+/g,'_').trim()||'prompt')+'.txt')},
+prdlall(){if(!S.prompts.length)return toast('No prompts to download');dlText(S.prompts.map(x=>`# ${x.title}\n\nCategory: ${x.category||'General'}\n\n${x.text}`).join('\n\n---\n\n'),'studyvault-prompts.md')},
+async prcopy(id){try{await navigator.clipboard.writeText(S.prompts.find(p=>p.id==id).text);toast('Copied to clipboard')}catch{toast('Copy blocked by the browser')}},
+async mnew(){const v=await form('New bookmark',[['title','Title','text'],['url','URL','url'],['tags','Tags','text']]);if(!v)return;if(!v.title.trim()||!okUrl(v.url))return toast('Enter a title and a valid http(s) URL');S.marks.push({id:uid(),...v});await save();render()},
+async mdel(id){if(!await sure('Delete this bookmark?'))return;S.marks=S.marks.filter(x=>x.id!=id);await save();render()},
+async profile(){const v=await form('Edit profile',[['name','Full name','text'],['headline','Professional headline','text'],['location','Location','text'],['bio','Bio','area'],['skills','Skills (comma separated)','text'],['github','GitHub URL','url'],['linkedin','LinkedIn URL','url'],['portfolio','Portfolio URL','url'],['email','Email','email']],S.profile);if(!v)return;for(const k of['github','linkedin','portfolio'])if(v[k]&&!okUrl(v[k]))return toast('Invalid URL: '+k);Object.assign(S.profile,v);await save();toast('Profile saved');render()},
+async exp(){toast('Preparing backup…');const b64=b=>new Promise(r=>{const x=new FileReader;x.onload=()=>r(x.result);x.readAsDataURL(b)});S.lastBackup=Date.now();await save();const fs=await Promise.all(files.map(async f=>({...f,blob:undefined,data:await b64(f.blob)})));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({v:1,date:Date.now(),S,files:fs})],{type:'application/json'}));a.download='studyvault-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Backup downloaded');render()},
+async imp(f){try{const d=JSON.parse(await f.text());if(!d.S||!d.files)throw 0;if(!await sure(`Replace ALL current data with the backup made on ${dt(d.date)}? Current data will be lost.`))return;await tx('files','clear');files=[];for(const x of d.files){const{data,...r}=x;r.blob=new Blob([await(await fetch(data)).blob()],{type:r.type});await putF(r);files.push(r)}S=d.S;await save();toast('Workspace restored');render()}catch{toast('That is not a valid StudyVault backup')}},
+async chfolder(){if(!await sure('Switch to a different folder? Your current folder stays untouched; the app will show whatever is in the new one.'))return;try{await chgFolder()}catch(e){return e.name=='AbortError'?0:toast(e.message)}S=await tx('kv','get','state')||blank();files=await tx('files','getAll');toast('Folder changed');render()},
+async rescan(){files=await tx('files','getAll');toast('Folder rescanned — '+files.length+' files');render()},
+async persist(){const ok=await navigator.storage?.persist?.();toast(ok?'Persistent storage granted':'Browser did not grant persistence — keep backups')},
+async wipe(){if(!await sure('Delete ALL files and data in the StudyVault folder? This cannot be undone.'))return;await tx('files','clear');files=[];S=blank();await save();toast('Workspace erased');act.go('dashboard')},
+theme(){S.theme=S.theme=='dark'?'light':'dark';document.documentElement.dataset.theme=S.theme;save()}
+};
+const dlText=(t,n)=>{const a=document.createElement('a'),u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.href=u;a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(u),1e3)};
+const PRF=[['title','Title','text'],['category','Category','text'],['projectId','Related project','sel',null],['text','Prompt text','area']];
+const PF=[['name','Project name','text'],['description','Description','area'],['category','Category','text'],['tech','Technologies (comma separated)','text'],['repo','GitHub repository URL','url'],['live','Visualize what you studied (link, e.g. GitHub Pages)','url'],['status','Completion status','sel',[['Planned','Planned'],['In progress','In progress'],['Completed','Completed']]],['notes','Notes','area']];
+async function pform(p){const v=await form(p?'Edit project':'New project',PF,p||{status:'Planned'});if(!v)return;if(!v.name.trim())return toast('Project name is required');for(const k of['repo','live'])if(v[k]&&!okUrl(v[k]))return toast('Enter a valid http(s) URL for '+(k=='live'?'Visualize what you studied':k));const t=Date.now();if(p)Object.assign(p,v,{updated:t});else{p={id:uid(),created:t,updated:t,...v};S.projects.push(p);pid=p.id;view='project'}await save();toast('Project saved');render()}
+const pcard=p=>`<article class="card pc" tabindex="0" data-a="open" data-id="${p.id}"><b>${esc(p.name)}</b> <span class="tag">${esc(p.status)}</span><small>${esc(p.category)}</small><p class="mu">${esc((p.description||'').slice(0,110))}</p>${(p.tech||'').split(',').filter(t=>t.trim()).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}<small>Updated ${dt(p.updated)} · ${files.filter(f=>f.projectId==p.id).length} files</small></article>`;
+const promptCard=x=>`<div class="card"><b>${esc(x.title)}</b> <span class="tag">${esc(x.category||'General')}</span>${P(x.projectId)?`<span class="tag">${esc(P(x.projectId).name)}</span>`:''}<pre>${esc(x.text.slice(0,400))}${x.text.length>400?'…':''}</pre><div class="acts"><button class="b s p" data-a="prcopy" data-id="${x.id}">Copy</button><button class="b s" data-a="prdl" data-id="${x.id}">Download</button><button class="b s" data-a="predit" data-id="${x.id}">Edit</button><button class="b s d" data-a="prdel" data-id="${x.id}">Delete</button></div></div>`;
+const V={
+dashboard(){const ar=S.projects.filter(p=>!p.archived),done=ar.filter(p=>p.status=='Completed').length,c=k=>files.filter(f=>f.cat==k).length,pic=FL(S.profile.pic),pr=ar.length?Math.round(done/ar.length*100):0;
+ let res='';if(Q){res=`<h3>Search results</h3><div class="grid">${ar.filter(p=>m(p.name,p.description,p.category,p.tech)).map(pcard).join('')}</div>${files.filter(f=>m(f.name,f.tags.join(' '))).map(fileRow).join('')}${S.prompts.filter(x=>m(x.title,x.text,x.category)).map(promptCard).join('')}`}
+ return `<div class="row2"><div data-a="go" data-id="profile" style="cursor:pointer" tabindex="0">${pic?`<img class="av" src="${url(pic)}" alt="Your profile picture">`:'<div class="av">✦</div>'}</div><div class="grow"><h1>Welcome to StudyVault${S.profile.name?', '+esc(S.profile.name):''}</h1><small>${esc(S.profile.headline||'Everything you learn and build, stored privately on this device.')}</small></div><button class="b p" data-a="pnew">+ Create project</button></div>
+ <div class="grid" style="margin:16px 0">${[['Projects',ar.length],['Documents',c('docs')],['ZIP files',c('zip')],['Videos',c('video')],['Visuals',(S.visuals||[]).length+ar.filter(p=>p.live).length],['Prompts',S.prompts.length]].map(([l,n])=>`<div class="card stat"><b>${n}</b>${l}</div>`).join('')}</div>${res}
+ <div class="grid"><div class="card"><b>Learning progress</b><small>${done} of ${ar.length} projects completed</small><div class="bar"><div style="width:${pr}%"></div></div></div><div class="card"><b>Saved in your folder</b><small>${files.length} files · ${fmt(files.reduce((a,f)=>a+f.size,0))}</small></div></div>
+ ${dz('')}<h3>Recent projects</h3>${ar.length?`<div class="grid">${[...ar].sort((a,b)=>b.updated-a.updated).slice(0,4).map(pcard).join('')}</div>`:empty('🚀','No projects yet. Create your first project to get started.')}
+ <h3>Recently uploaded</h3>${files.length?[...files].sort((a,b)=>b.added-a.added).slice(0,4).map(fileRow).join(''):empty('📂','Nothing uploaded yet. Drop a file above.')}`},
+projects(){const l=S.projects.filter(p=>!p.archived&&m(p.name,p.description,p.category,p.tech)&&(!F.s||p.status==F.s));
+ return `<div class="row"><h1 class="grow">My Projects</h1><select data-f="s" style="width:auto" aria-label="Filter by status">${[['','All statuses'],['Planned','Planned'],['In progress','In progress'],['Completed','Completed']].map(([a,b])=>`<option value="${a}"${a==F.s?' selected':''}>${b}</option>`).join('')}</select><button class="b p" data-a="pnew">+ New project</button></div>${l.length?`<div class="grid">${l.map(pcard).join('')}</div>`:empty('▣','No matching projects.')}`},
+project(){const p=P(pid);if(!p)return empty('?','Project not found');const pf=files.filter(f=>f.projectId==p.id),pics=pf.filter(f=>f.cat=='pic'),pr=S.prompts.filter(x=>x.projectId==p.id),b=(a,l,c='')=>`<button class="b s ${c}" data-a="${a}" data-id="${p.id}">${l}</button>`;
+ return `<button class="b" data-a="go" data-id="projects">← Projects</button><h1>${esc(p.name)} <span class="tag">${esc(p.status)}</span></h1><small>ID ${esc(p.id)} · Created ${dt(p.created)} · Updated ${dt(p.updated)}</small>
+ <div class="card"><p>${esc(p.description)||'<span class="mu">No description.</span>'}</p><p class="mu">Category: ${esc(p.category||'—')} · Technologies: ${esc(p.tech||'—')}</p><div class="acts" style="margin:10px 0">${link(p.repo,'⑂ GitHub repository','gh')}${link(p.live,'❖ Visualize what you studied','v')}</div>${p.notes?`<h3>Notes</h3><pre>${esc(p.notes)}</pre>`:''}<div class="acts">${b('pedit','Edit')}${b('plink','Link existing file')}${b('prnew','Add prompt')}${b('parch','Archive')}${b('pdel','Delete','d')}</div></div>
+ ${dz('',p.id)}${pics.length?`<h3>Screenshots</h3><div class="grid">${pics.map(f=>`<img class="thumb" data-a="prev" data-id="${f.id}" title="Click to preview" src="${url(f)}" alt="${esc(f.name)}">`).join('')}</div>`:''}<h3>Resources</h3>${pf.map(fileRow).join('')||empty('📎','No resources yet. Upload or link files above.')}<h3>Related prompts</h3>${pr.map(promptCard).join('')||'<p class="mu">None linked.</p>'}`},
+repos(){const l=S.projects.filter(p=>p.repo&&!p.archived&&m(p.name,p.repo));return `<h1>GitHub Repositories</h1><p class="mu">Repositories are added through each project's "GitHub repository URL" field.</p>${l.map(p=>`<div class="card row2"><span class="ic">⑂</span><div class="grow"><b>${esc(p.name)}</b><small>${esc(p.repo)}</small></div>${link(p.repo,'⑂ Open repository','gh s')}<button class="b s" data-a="open" data-id="${p.id}">Project</button></div>`).join('')||empty('⑂','No repositories linked yet.')}`},
+prompts(){PRF[2][3]=projOpts();const l=S.prompts.filter(x=>m(x.title,x.text,x.category));return `<div class="row"><h1 class="grow">Prompt Library</h1><label class="b">Upload prompt file<input type="file" accept=".txt,.md,text/*" hidden data-pf></label><button class="b" data-a="prdlall">Download all</button><button class="b p" data-a="prnew">+ New prompt</button></div>${l.map(promptCard).join('')||empty('✎','No prompts yet. Save your best ones here.')}`},
+marks(){const l=S.marks.filter(x=>m(x.title,x.url,x.tags));return `<div class="row"><h1 class="grow">Bookmarks & Resources</h1><button class="b p" data-a="mnew">+ Add bookmark</button></div>${l.map(x=>`<div class="card row2"><span class="ic">★</span><div class="grow"><b>${link(x.url,esc(x.title))||esc(x.title)}</b><small>${esc(x.url)}</small>${(x.tags||'').split(',').filter(t=>t.trim()).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</div><button class="b s d" data-a="mdel" data-id="${x.id}">Delete</button></div>`).join('')||empty('★','No bookmarks yet.')}`},
+archive(){const l=S.projects.filter(p=>p.archived&&m(p.name,p.description));return `<h1>Archive</h1>${l.map(p=>`<div class="card row2"><div class="grow"><b>${esc(p.name)}</b><small>Updated ${dt(p.updated)}</small></div><button class="b s" data-a="parch" data-id="${p.id}">Restore</button><button class="b s d" data-a="pdel" data-id="${p.id}">Delete</button></div>`).join('')||empty('▢','Archived projects appear here.')}`},
+profile(){const p=S.profile,pic=FL(p.pic);return `<button class="b" data-a="go" data-id="dashboard">← Dashboard</button><h1>Profile</h1><div class="card row2">${pic?`<img class="av" src="${url(pic)}" alt="Profile picture">`:'<div class="av">✦</div>'}<div class="grow"><h2>${esc(p.name||'Your name')}</h2><small>${esc(p.headline||'Add a headline')} · ${esc(p.location||'')}</small></div><label class="b s">Upload picture<input type="file" accept="image/*" hidden data-av></label>${pic?'<button class="b s d" data-a="rmav">Remove</button>':''}<button class="b p s" data-a="profile">Edit profile</button></div><div class="card"><p>${esc(p.bio||'Write a short bio.')}</p><p>${(p.skills||'').split(',').filter(t=>t.trim()).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</p><p>${link(p.github,'GitHub')}${link(p.linkedin,'LinkedIn')}${link(p.portfolio,'Portfolio')}${p.email?esc(p.email):''}</p></div>`},
+settings(){return `<h1>Backup & Settings</h1><div class="card"><h3>Storage folder</h3><p>Current folder: <b>${esc(ROOT.name)}</b></p><p class="mu">Everything is saved as normal files in this folder, with one sub-folder per sidebar section. Files you add to those sub-folders in File Explorer appear here after Rescan. To back up, copy the whole folder; to restore, choose it again.</p><div class="acts"><button class="b p" data-a="rescan">Rescan folder</button><button class="b" data-a="chfolder">Change folder</button><button class="b" data-a="theme">Toggle theme</button><button class="b d" data-a="wipe">Erase everything</button></div></div><div class="card"><h3>Sub-folders</h3>${DIRS.map(d=>`<span class="tag">${esc(d)}</span>`).join('')}</div>`},
+visual(){const tg=v=>(v.tags||'').split(',').map(t=>t.trim()).filter(Boolean),
+ all=[...(S.visuals||[]).map(v=>({...v,own:1})),...S.projects.filter(p=>p.live&&!p.archived).map(p=>({id:p.id,title:p.name,url:p.live,tags:'',projectId:p.id}))],
+ tags=[...new Set(all.flatMap(tg))].sort(),l=all.filter(v=>m(v.title,v.url,v.tags)&&(!F.t||tg(v).includes(F.t)));
+ return `<div class="row"><h1 class="grow">Visualize What You Study</h1>${tags.length?`<select data-f="t" style="width:auto" aria-label="Filter by topic"><option value="">All topics</option>${tags.map(t=>`<option value="${esc(t)}"${t==F.t?' selected':''}>${esc(t)}</option>`).join('')}</select>`:''}<button class="b p" data-a="vnew">+ Add visualization link</button></div>
+ <p class="mu">Paste the link of a visualization you generated (for example a GitHub Pages link). It opens directly in a new tab. Every link is also saved in your <b>Visual Study</b> folder as a shortcut file that opens in Chrome.</p>
+ ${l.length?l.map(v=>`<div class="card row2"><span class="ic">❖</span><div class="grow"><b>${esc(v.title)}</b>${v.own?(P(v.projectId)?`<span class="tag">${esc(P(v.projectId).name)}</span>`:''):'<span class="tag">from project</span>'}<small>${esc(v.url)}</small><div>${tg(v).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><div class="acts">${okUrl(v.url)?`<a class="b s v" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer">❖ Open visualization ↗</a>`:''}${v.own?`<button class="b s" data-a="vedit" data-id="${v.id}">Edit</button><button class="b s d" data-a="vdel" data-id="${v.id}">Delete</button>`:`<button class="b s" data-a="open" data-id="${v.id}">Project</button>`}</div></div>`).join(''):empty('❖','No visualization links yet. Add the link you generated for what you studied.')}`},
+lib(cat){const n=NAV.find(x=>x[0]==cat)[1],l=files.filter(f=>f.cat==cat&&m(f.name,f.tags.join(' ')));return `<h1>${n}</h1>${dz(cat)}${cat=='pic'&&l.length?`<div class="grid">${l.map(f=>`<img class="thumb" data-a="prev" data-id="${f.id}" title="Click to preview" src="${url(f)}" alt="${esc(f.name)}">`).join('')}</div>`:''}${l.map(fileRow).join('')||empty(ICO[cat],'Nothing here yet. Upload your first file above.')}`}};
+function render(){const f=V[view]||(()=>V.lib(view));$('#main').innerHTML=f();document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.id==view||view=='project'&&b.dataset.id=='projects'));$('#side').classList.remove('open');
+ if($('#stor'))navigator.storage?.estimate?.().then(e=>{$('#stor').textContent=`${fmt(e.usage)} used of about ${fmt(e.quota)} available`;const b=$('#sbar');if(b)b.style.width=Math.max(1,e.usage/e.quota*100)+'%'})}
+const blank=()=>({projects:[],prompts:[],marks:[],profile:{},theme:'dark'});
+/* events */
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t)act[t.dataset.a]?.(t.dataset.id,t)});
+document.addEventListener('keydown',e=>{if(e.key!='Enter')return;const t=e.target;if(t.classList?.contains('drop'))$('input',t).click();else if(t.dataset?.a&&t.tagName!='BUTTON')t.click()});
+document.addEventListener('dragover',e=>{if(e.target.closest('.drop'))e.preventDefault()});
+document.addEventListener('drop',e=>{const d=e.target.closest('.drop');if(d){e.preventDefault();const i=$('input',d);add([...e.dataTransfer.files],i.dataset.cat,i.dataset.p)}});
+document.addEventListener('change',async e=>{const t=e.target;if(t.dataset.f){F[t.dataset.f]=t.value;render()}else if(t.type=='file'){const fl=[...t.files];t.value='';if(t.dataset.imp!==undefined)act.imp(fl[0]);else if(t.dataset.pf!==undefined)act.prfile(fl[0]);else if(t.dataset.av!==undefined){await add(fl.slice(0,1),'pic');S.profile.pic=files.at(-1).id;await save();render()}else add(fl,t.dataset.cat,t.dataset.p)}});
+$('#q').oninput=e=>{Q=e.target.value;if(!['dashboard','projects','docs','zip','video','notes','resume','pic','cert','visual','prompts','marks','archive','repos'].includes(view))view='dashboard';render()};
+$('#menu').onclick=()=>$('#side').classList.toggle('open');$('#theme').onclick=act.theme;
+$('#nav').innerHTML=NAV.map(([id,l,i])=>`<button data-a="go" data-id="${id}"><span>${i}</span>${l}</button>`).join('');
+/* particles */
+(()=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const c=$('#bg'),x=c.getContext('2d');let w,h;const ps=[...Array(45)].map(()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.4,s:Math.random()*4e-4+1e-4})),rs=()=>{w=c.width=innerWidth;h=c.height=innerHeight};rs();addEventListener('resize',rs);(function t(){if(!document.hidden){x.clearRect(0,0,w,h);x.fillStyle='rgba(160,150,255,.6)';x.shadowBlur=8;x.shadowColor='#8b7bff';for(const p of ps){p.y=(p.y-p.s+1)%1;x.beginPath();x.arc(p.x*w,p.y*h,p.r,0,7);x.fill()}}requestAnimationFrame(t)})()})();
+/* landing splash - shown on every start (branding) */
+const splash=()=>new Promise(res=>{const d=document.createElement('div');d.id='splash';let i=0,done=0;
+ d.innerHTML=`<div class="sp-glow"></div><div class="sp-in"><h1 class="sp-t" aria-label="Welcome to Study Vault">${'Welcome to Study Vault'.split(' ').map(w=>`<span class="sp-w" aria-hidden="true">${[...w].map(c=>`<span style="animation-delay:${(.3+(i++)*.07).toFixed(2)}s">${c}</span>`).join('')}</span>`).join(' ')}</h1><div class="sp-line"></div><p class="sp-by">Built by</p><p class="sp-n">Vinit M. Shimpi</p><small class="sp-skip">Click to continue</small></div>`;
+ document.body.append(d);const end=()=>{if(done)return;done=1;d.classList.add('out');setTimeout(()=>{d.remove();res()},700)};
+ setTimeout(()=>{d.onclick=end},4200);setTimeout(end,7000)});
+/* boot */
+(async()=>{await splash();await initFolder();
+S=await tx('kv','get','state')||blank();files=await tx('files','getAll');if(PENDING_NAME){S.profile=S.profile||{};S.profile.name=PENDING_NAME;PENDING_NAME='';await save()}document.documentElement.dataset.theme=S.theme;render();
+if(!S.welcomed){S.welcomed=1;save();modal(`<div class="f"><h2>Welcome to StudyVault${S.profile.name?', '+esc(S.profile.name):''} ✦</h2><p>Your private workspace for projects, files, prompts and notes. Everything is saved <b>only in the folder you chose</b> on this computer — no account, no server, nothing uploaded.</p><p class="mu">To back up, simply copy that folder.</p><div class="row"><button class="b" id="e">Explore</button><button class="b p" id="c">Create first project</button></div></div>`);$('#e').onclick=close;$('#c').onclick=()=>{close();act.pnew()}}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{})})();
+dlg.addEventListener('click',e=>{if(e.target===dlg&&dlg.classList.contains('big'))close()});
+/* show problems instead of failing silently */
+addEventListener('unhandledrejection',e=>toast('Something failed: '+(e.reason&&e.reason.message||e.reason)));
+addEventListener('error',e=>toast('Error: '+e.message));
+
+</script>
+</body>
+</html>

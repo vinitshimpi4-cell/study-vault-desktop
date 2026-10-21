@@ -1,0 +1,25 @@
+{
+  "name": "studyvault-desktop",
+  "productName": "StudyVault",
+  "version": "1.0.0",
+  "description": "StudyVault as a desktop app (Electron wrapper, no changes to your data format).",
+  "author": "Vinit M. Shimpi",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.studyvault.desktop",
+    "productName": "StudyVault",
+    "files": ["main.js", "app/**"],
+    "win": { "target": ["nsis", "portable"] },
+    "mac": { "target": "dmg" },
+    "linux": { "target": "AppImage", "category": "Education" }
+  }
+}
